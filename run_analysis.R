@@ -1,6 +1,7 @@
 library(stringr)
 library(dplyr)
 
+# Returns TRUE if line contains text. Otherwise returns NA
 containsTextSingle <- function(line,text) {
   x <- str_extract(string = line, pattern = text);
   if (!is.na(x) && text == x) {
@@ -10,6 +11,9 @@ containsTextSingle <- function(line,text) {
   }
 }
 
+# Returns a logical vector. Each element
+# indicates either TRUE or NA depending if the line at that position in
+# lines contains text
 containsText <- function(lines, text) {
   size <- length(lines)
   result <- logical(size);
@@ -20,6 +24,7 @@ containsText <- function(lines, text) {
   result
 }
 
+# Creates an empty vector of type with a given size.
 createEmptyVector <- function(type, size) {
   empty <- rep(NA, size)
   as.vector(empty, type)
@@ -64,6 +69,8 @@ getKnownVariablesMetadata <- function() {
   knownVariables;
 }
 
+# Returns a vector with the names of the features as seen in the features.txt
+# the only modification it makes is to remove the rowid with which the row line starts.
 extractOriginalNames <- function(lines) {
   size <- length(lines)
   result <- character(size);
@@ -75,6 +82,8 @@ extractOriginalNames <- function(lines) {
   result
 }
 
+# Creates a vector with more readable column names for original features
+# However dplyr kept complaining column were not unique, so I had to give up this automated approach
 extractReadableNames <- function(lines) {
   orig <- extractOriginalNames(lines)
   size <- length(lines)
@@ -96,6 +105,7 @@ extractReadableNames <- function(lines) {
   result
 }
 
+# Extracts the featured id, which I call the row number basically.
 extractFeatureId <- function(lines) {
   size <- length(lines)
   result <- integer(size);
@@ -109,6 +119,8 @@ extractFeatureId <- function(lines) {
   result
 }
 
+# Gets logical vector indicating if line at position in lines
+# is [f] or [t] - frequency or time domain.
 extractIsDomain <- function(lines,domainId) {
   size <- length(lines)
   result <- logical(size);
@@ -125,6 +137,14 @@ extractIsDomain <- function(lines,domainId) {
   result
 }
 
+# Returns a vector with feature coordinates
+# such as
+# X 
+# Y
+# Z
+# X,4
+# 10,15
+# X1 
 extractCoordinates <- function(lines) {
   r <- "[XYZ,[:digit:]*]*$"
   size <- length(lines)
@@ -154,6 +174,8 @@ extractCoordinates <- function(lines) {
   result
 }
 
+# Uses the known variables metadata from features_info.txt to generate a vector
+# with the variable name for each line in lines
 extractVariableNames <- function(lines) {
   vars <- getKnownVariablesMetadata();
   varNames <- names(vars)
@@ -178,6 +200,8 @@ extractVariableNames <- function(lines) {
   as.factor(result)
 }
 
+# Uses the known variables metadata from features_info.txt to generate a vector
+# with the variable description for each line in lines
 extractVariableDescription <- function(lines) {
   vars <- getKnownVariablesMetadata();
   varNames <- names(vars)
@@ -349,6 +373,8 @@ runAnalysis <- function() {
   s %>% left_join(activities, by="ActivityId")
 }
 
+# reads activity_labels.txt type of file and
+# adds IsWalking and IsAtRest logical columns
 readActivityTable <- function(activity_def_file) {
   lines <- readSimpleFile(activity_def_file)
   ids <- integer(length(lines))
@@ -364,6 +390,10 @@ readActivityTable <- function(activity_def_file) {
   mutate(df, IsWalking = (ActivityId <= 3), IsAtRest = (ActivityId>3))
 }
 
+# Takes existingColumnNames which is in the format 1,2,3,4...145...561...activity,subject
+# and replaces the feature numbers with a more readable name
+# Unfortunately I hit a bug in dplyr where it thinks column names are not unique
+# so I ended up prefixing it with FeatureId[Num].
 convertReadableColumnName <- function(existingColumnNames, featureMetadata) {
   result <- character(length(existingColumnNames))
   for(i in seq_along(result)) {
@@ -426,6 +456,7 @@ readMainDataSet <- function(readingsfile, subjectfile, activityfile) {
   df
 }
 
+# Simply merges the train and test data sets.
 mergeMainDataSets <- function(r1,s1,a1,r2,s2,a2) {
   ds1 <- readMainDataSet(r1,s1,a1);
   ds2 <- readMainDataSet(r2,s2,a2);
