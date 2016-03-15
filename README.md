@@ -1,12 +1,19 @@
----
-title: "README"
----
-
 ## How to run run_analysis.R
 
 Prior running run_analysis.R we need to setwd() to the folder that contains the dataset.
 
 For example on my environment it would be: setwd(/Users/Lyuben/Desktop/R/coursera/UCI HAR Dataset-2)
+
+## How to read run_analysis.R
+
+The order of the functions in run_analysis.R is not necessarily the best order for
+
+reading it, however it is the necessary order for the script to execute successfully.
+
+Smaller utility functions tend to be on top of the file while the 
+more complex ones are in the middle or the bottom of the file.
+
+The last few lines of run_analysis.R invoke runAnalysis() method.
 
 ## Approach taken
 
