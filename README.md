@@ -50,3 +50,14 @@ I think I might have overcomplicated the code a bit, and maybe I am missing some
 
 For example, the final naming of the columns could be dynamically userfriendly name as seen in View(featureMetadata)'s "ReadableName", however I kept hitting a bug where dplyr kept insisting
 that there were duplicate column names.
+
+## Codebook
+
+I have automatically generated the codebook in a variable called "featureMetadata".
+
+One can view it with View(featureMetadata) after loading my run_analysis.R 
+
+Nevertheless, I am embedding a csv file with its content in a file called "feature_codebook.csv" in the repository.
+
+I am using this codebook to programatically search for feature columns I am interested in.
+
