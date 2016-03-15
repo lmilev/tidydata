@@ -57,7 +57,7 @@ I have automatically generated the codebook in a variable called "featureMetadat
 
 One can view it with View(featureMetadata) after loading my run_analysis.R 
 
-Nevertheless, I am embedding a csv file with its content in a file called "feature_codebook.csv" in the repository.
+Nevertheless, I am embedding a csv file with its content in a file https://github.com/lmilev/tidydata/blob/master/feature_codebook.csv in the repository.
 
 I am using this codebook to programatically search for feature columns I am interested in.
 
